@@ -55,6 +55,7 @@ public class PoblacionInicial {
                 for (int d = 0; d < cantCantidadDeDemandas; d++) {
                     pathActual = pathInicial + "k" + (a + 1) + "\\cantSolicitada" + cantDemandas.get(d) + "\\";
                     demandaInfoList.addAll(llenarDemandInfo(pathActual + "ga.txt"));
+                    //Normalizar los Objetivos
                     saltoMayor = getSaltoMayorDeLaRed(demandaInfoList, a + 1);
                     costoMayor = (getCostoMayorDeLaRed(demandaInfoList) + 1) * saltoMayor; // el 1 es agregado para banda guarda
                     espectroMayor = Long.valueOf(totalRanuras);
@@ -64,6 +65,7 @@ public class PoblacionInicial {
                         guardarMaximos(archivoDeMaximos);
                         demandaInfoList = new ArrayList<>();
                     } else {
+                        //Prepara archivo donde se guarda los resultados
                         String sFichero = pathActual + algoritmo +"_corridaNro_1.txt";
                         File fichero = new File(sFichero);
 
@@ -152,7 +154,7 @@ public class PoblacionInicial {
 
             DemandaInfo demanda = mayores.get(m);
             bloqueado = true;
-
+            //Ve cual esta libre
             for (j = 0; j < demandasInfo.size(); j++){
                 if (demandasInfo.get(j).getOrigen() == demanda.getOrigen() &&
                 demandasInfo.get(j).getDestino() == demanda.getDestino()){
