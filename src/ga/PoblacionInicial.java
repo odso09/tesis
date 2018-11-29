@@ -2,6 +2,7 @@ package ga;
 import ga.objects.Enlace;
 import ga.objects.Ruteo;
 import ga.objects.Solucion;
+import ga.objects.Fibra;
 
 import java.io.*;
 import java.util.*;
@@ -782,23 +783,30 @@ public class PoblacionInicial {
     public static List<Enlace> generarListaInicialRanuras (int cantRanuras, List<List<Boolean>> topologia) {
         int i, j, k;
         Enlace enlace;
+        Fibra fibra;
         List<Enlace> enlaces = new ArrayList<>();
-        List<Boolean> ranuras;
-
+        List<Boolean> FS;
+        List<Fibra> fibras;
         for (i = 0; i < topologia.get(0).size(); i++ ) {
             for (j = 0; j < topologia.get(0).size(); j++ ) {
-                if (topologia.get(i).get(j)){
-                    enlace = new Enlace();
-                    ranuras = new ArrayList<>();
-                    for (k = 0; k < cantRanuras; k++) {
-                        ranuras.add(false);
-                    }
+                if (topologia.get(i).get(j))
+                {   enlace = new Enlace();
+                    fibras = new ArrayList<>();
+                    
+                    for(int a=0 ; a<enlace.getNroFibras()-1 ;a++)
+                    {   fibra = new Fibra();
+                        FS = new ArrayList<>();
 
+                        for (k = 0; k < cantRanuras; k++) 
+                        {
+                            FS.add(false);
+                        }
+                        fibra.setFS(FS);
+                        fibras.add(fibra);
+                    }
                     enlace.setInicio(i);
                     enlace.setFin(j);
-                    enlace.setRanuras(ranuras);
-
-                    enlaces.add(enlace);
+                    enlace.setFibras(fibras);
                 }
             }
         }

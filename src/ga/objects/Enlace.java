@@ -1,5 +1,4 @@
 package ga.objects;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,19 +7,20 @@ import java.util.List;
  */
 public class Enlace {
 
-    int inicio, fin;
-    List<Boolean> ranuras;
+    int inicio, fin, nroFibras;
+    List<Fibra> fibras;
 
     public Enlace (){
         inicio = -1;
         fin = -1;
-        ranuras = new ArrayList<Boolean>();
+        fibras = new ArrayList<Fibra>();
+        nroFibras = 3;
     }
 
-    public Enlace(int p, int s, List<Boolean> ranuras) {
+    public Enlace(int p, int s, List<Fibra> fibras) {
         this.inicio = p;
         this.fin = s;
-        this.ranuras = ranuras;
+        this.fibras = fibras;
     }
 
     public int getInicio() {
@@ -38,12 +38,20 @@ public class Enlace {
     public void setFin(int fin) {
         this.fin = fin;
     }
-
-    public List<Boolean> getRanuras() {
-        return ranuras;
+    
+    public int getNroFibras() {
+        return nroFibras;
     }
 
-    public void setRanuras(List<Boolean> ranuras) {
-        this.ranuras = ranuras;
+    public void setNroFibras(int nroFibras) {
+        this.nroFibras = nroFibras;
+    }
+
+    public List<Fibra> getFibras() {
+        return fibras;
+    }
+
+    public void setFibras(List<Fibra> fibras) {
+        this.fibras = fibras;
     }
 }
