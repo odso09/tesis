@@ -29,12 +29,13 @@ public class PoblacionInicial {
             String pathInicial = pathGeneral + tipoDeCarga + "\\";
             List<List<Solucion>> todosLosConjuntos = new ArrayList<>();
             List<List<Boolean>> topologia = AGHelper.leerTopologia(pathGeneral);
-            int cantLlamadasGA = AGHelper.leerParametro(pathGeneral, "cantidad de corridas independientes");
             int cantSolucionesIniciales = AGHelper.leerParametro(pathGeneral, "cantidad de cromosomas");
             int totalRanuras = AGHelper.leerParametro(pathGeneral, "cantidad de longitudes de onda por fibra");
             int criterioDeParada = AGHelper.leerParametro(pathGeneral, "criterio de parada");
+            int cantLlamadasGA = AGHelper.leerParametro(pathGeneral, "cantidad de corridas independientes");
             double probabMutacion = AGHelper.leerProbabMutacion(pathGeneral, "probabilidad de mutacion");
-        /*
+            int k = 6;
+            /*  
         *  1. MOGA spectrum allocation random
         *  2. MOGA spectrum allocation first fit
         */
@@ -44,7 +45,7 @@ public class PoblacionInicial {
             cantDemandas.add(100);
             cantDemandas.add(150);
             cantDemandas.add(200);
-            int k = 6;
+            
             int cantCantidadDeDemandas = 4;
             List<DemandaInfo> demandaInfoList = new ArrayList<>();
             String archivoDeMaximos;
