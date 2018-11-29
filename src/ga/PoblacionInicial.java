@@ -29,11 +29,12 @@ public class PoblacionInicial {
             String pathInicial = pathGeneral + tipoDeCarga + "\\";
             List<List<Solucion>> todosLosConjuntos = new ArrayList<>();
             List<List<Boolean>> topologia = AGHelper.leerTopologia(pathGeneral);
-            int cantSolucionesIniciales = AGHelper.leerParametro(pathGeneral, "cantidad de cromosomas");
+            //Parametros
             int totalRanuras = AGHelper.leerParametro(pathGeneral, "cantidad de longitudes de onda por fibra");
+            int cantSolucionesIniciales = AGHelper.leerParametro(pathGeneral, "cantidad de cromosomas");
+            double probabMutacion = AGHelper.leerProbabMutacion(pathGeneral, "probabilidad de mutacion");
             int criterioDeParada = AGHelper.leerParametro(pathGeneral, "criterio de parada");
             int cantLlamadasGA = AGHelper.leerParametro(pathGeneral, "cantidad de corridas independientes");
-            double probabMutacion = AGHelper.leerProbabMutacion(pathGeneral, "probabilidad de mutacion");
             int k = 6;
             /*  
         *  1. MOGA spectrum allocation random
