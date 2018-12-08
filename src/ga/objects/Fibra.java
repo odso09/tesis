@@ -12,22 +12,22 @@ import java.util.List;
  */
 public class Fibra {
     
-    List<Boolean> FS;
+    List<Boolean> FSs;
     
     public Fibra (){
         
-        FS = new ArrayList<Boolean>();
+        FSs = new ArrayList<Boolean>();
     }
     
-    public Fibra(List<Boolean> FS) {
-        this.FS = FS;
+    public Fibra(List<Boolean> FSs) {
+        this.FSs = FSs;
     }
     
-    public List<Boolean> getFS() {
-        return FS;
+    public List<Boolean> getFSs() {
+        return FSs;
     }
 
-    public void setFS(List<Boolean> FS) {
-        this.FS = FS;
+    public void setFSs(List<Boolean> FSs) {
+        this.FSs = FSs;
     }
 }

@@ -153,16 +153,18 @@ public class PoblacionInicial {
         // de cada demanda, traigo la ruta mas corta de demandasInfo e intento asignarle la cantidad de ranuras que quiere
         // si no puede con esa ruta, intenta con la siguiente ruta mas corta, etc
         // y si no puede asignar las ranuras con ninguna de sus rutas, suma una demanda bloqueada a solucion
-        for (int m = 0; m < mayores.size(); m++) {
-
+        for (int m = 0; m < mayores.size(); m++) 
+        {
             DemandaInfo demanda = mayores.get(m);
             bloqueado = true;
             //Ve cual esta libre
-            for (j = 0; j < demandasInfo.size(); j++){
-                if (demandasInfo.get(j).getOrigen() == demanda.getOrigen() &&
-                demandasInfo.get(j).getDestino() == demanda.getDestino()){
+            for (j = 0; j < demandasInfo.size(); j++)
+            {
+                if (demanda.getOrigen() == demandasInfo.get(j).getOrigen() 
+                 && demanda.getDestino() == demandasInfo.get(j).getDestino())
+                {
                     if (asignarRanuras(solucion, j, demandasInfo, algoritmo)){
-                        j = demandasInfo.size();
+                        j = demandasInfo.size(); //para salir del for
                         bloqueado = false;
                     }
                 }
@@ -240,16 +242,43 @@ public class PoblacionInicial {
         }
     }
 
-    public static boolean asignarRanuras (Solucion solucion, int rutaNro, List<DemandaInfo> demandasInfo, String algoritmo){
+    public static boolean asignarRanuras (Solucion solucion, int rutaNro, List<DemandaInfo> demandasInfo, String algoritmo)
+    {
 
         boolean aplica = false;
-        List<Boolean> ranuras = new ArrayList<>();
-        List<Integer> posicionesLibres = new ArrayList<>();
-        int r, cantRanurasLibres;
+        //List<Boolean> ranuras = new ArrayList<>();
+        //List<Integer> posicionesLibres = new ArrayList<>();
+        //int r, cantRanurasLibres;
 
         DemandaInfo demandaInfo = demandasInfo.get(rutaNro);
-        int nodoPrimero = demandaInfo.getRuta().get(0);
-        int nodoSegundo = demandaInfo.getRuta().get(1);
+        //int nodoPrimero = demandaInfo.getRuta().get(0);
+        //int nodoSegundo = demandaInfo.getRuta().get(1);
+        
+        List<Integer> ranurasDisponibles = new ArrayList<>();
+        ranurasDisponibles.addAll(obtenerRanurasDisponiblesParaRuta(solucion, demandaInfo));
+        // elegir randomicamente una posicion e ranurasDisponibles
+        // asignar esa ranura a la solucion para esta demanda
+
+        if (ranurasDisponibles.isEmpty())
+            return false;
+        else 
+        {
+            if ("moga1".equals(algoritmo)) 
+            {
+                // elegir enlaces aleatoriamente
+                int ranuraElegida = (int) (Math.random()*(ranurasDisponibles.size()-1));
+                agregarRanurasASolucion(solucion, rutaNro, demandaInfo, ranurasDisponibles.get(ranuraElegida));
+
+            } else if ("moga2".equals(algoritmo)) 
+            {
+                // elegir ranuras con first fit
+                agregarRanurasASolucion(solucion, rutaNro, demandaInfo, ranurasDisponibles.get(0));
+            } else 
+            {
+                return false;
+            }
+            return true;
+        }
 
         // recorrer todos los enlaces, y guardar en una lista de listas las ranuras que correspondan a los enlaces de mi ruta.
         // en la lista lo que voy a guardar es si mi ranura R == 1, elimino la posicion que contenga
@@ -284,75 +313,75 @@ public class PoblacionInicial {
 
         return false;
         */
-
-        List<Integer> ranurasDisponibles = new ArrayList<>();
-        ranurasDisponibles.addAll(obtenerRanurasDisponiblesParaRuta(solucion, demandaInfo));
-        // elegir randomicamente una posicion e ranurasDisponibles
-        // asignar esa ranura a la solucion para esta demanda
-
-        if (ranurasDisponibles.isEmpty())
-            return false;
-        else {
-            if ("moga1".equals(algoritmo)) {
-                // elegir enlaces aleatoriamente
-                int ranuraElegida = (int) (Math.random()*(ranurasDisponibles.size()-1));
-                agregarRanurasASolucion(solucion, rutaNro, demandaInfo, ranurasDisponibles.get(ranuraElegida));
-
-            } else if ("moga2".equals(algoritmo)) {
-                // elegir ranuras con first fit
-                agregarRanurasASolucion(solucion, rutaNro, demandaInfo, ranurasDisponibles.get(0));
-            } else {
-                return false;
-            }
-            return true;
-        }
     }
 
-    public static List<Integer> obtenerRanurasDisponiblesParaRuta (Solucion solucion, DemandaInfo demandaInfo) {
+    public static List<List<Integer>> obtenerRanurasDisponiblesParaRuta (Solucion solucion, DemandaInfo demandaInfo) {
         int origen;
         int destino;
         List<Enlace> enlaces = new ArrayList<>();
-
+        //OBTENEMOS LOS ENLACES A UTILIZARSE EN UN ARRAY LLAMADO ENLACE
         for (int i = 0; i < solucion.getEnlaces().size(); i++) {
             for (int j = 0; j < (demandaInfo.getRuta().size()-1); j++) {
                 origen = demandaInfo.getRuta().get(j);
                 destino = demandaInfo.getRuta().get(j + 1);
 
-                if (solucion.getEnlaces().get(i).getInicio() == origen &&
-                        solucion.getEnlaces().get(i).getFin() == destino) {
+                if ( solucion.getEnlaces().get(i).getInicio() == origen && 
+                     solucion.getEnlaces().get(i).getFin() == destino ) 
+                {
                     enlaces.add(solucion.getEnlaces().get(i));
                 }
             }
         }
-
-        List<Integer> indiceDeRanurasLibres = new ArrayList<>();
-
-        // obtener ranuras libres del primer enlace
-        for (int i = 0; i < enlaces.get(0).getRanuras().size(); i++) {
-            if (ranuraEsSolucion(enlaces.get(0).getRanuras(), i, demandaInfo.getTraf() + nivelDeModulacion)) {
-                indiceDeRanurasLibres.add(i);
-            }
-        }
-
-        for (int i = 1; i < enlaces.size(); i++) {
-            List<Integer> copiaIndiceDeRanurasLibres = new ArrayList<>();
-            copiaIndiceDeRanurasLibres.addAll(indiceDeRanurasLibres);
-            for (int j = 0; j < indiceDeRanurasLibres.size(); j++) {
-                if (!ranuraEsSolucion(enlaces.get(i).getRanuras(), indiceDeRanurasLibres.get(j), demandaInfo.getTraf() + nivelDeModulacion)) {
-                    copiaIndiceDeRanurasLibres.remove(indiceDeRanurasLibres.get(j));
+        
+// obtener ranuras libres del primer enlace en el array arrayIndiceDeRanurasLibres
+        List<Integer> indiceDeRanurasLibres;
+        List<List<Integer>> arrayIndiceDeRanurasLibres = new ArrayList<>();
+        
+        //Llenamos el array de arrays de indices de fs disponibles
+        for (int c = 0; c < enlaces.get(0).getNroFibras(); c++) //recorrer por cores
+        {   indiceDeRanurasLibres = new ArrayList<>();
+            for (int i = 0; i < enlaces.get(0).getFibras().get(0).getFSs().size(); i++) //recorrer por cant de FS en 1 core
+            {  
+                if (ranuraEsSolucion(enlaces.get(0).getFibras().get(c).getFSs(), i, demandaInfo.getTraf() + nivelDeModulacion)) 
+                {
+                    indiceDeRanurasLibres.add(i);
                 }
             }
-            indiceDeRanurasLibres = new ArrayList<>();
-            indiceDeRanurasLibres.addAll(copiaIndiceDeRanurasLibres);
-        }
+            arrayIndiceDeRanurasLibres.add(indiceDeRanurasLibres);
+        }    
+        
 
-        return indiceDeRanurasLibres;
+        for (int i = 1; i < enlaces.size(); i++) //recorrer por enlaces desde el enlace 2
+        {  
+            List<List<Integer>> copiaIndiceDeRanurasLibres = new ArrayList<>();   
+            copiaIndiceDeRanurasLibres.addAll(arrayIndiceDeRanurasLibres); //Copiamos la matriz de indices de ranuras libres
+            
+            for (int c = 0; c < enlaces.get(0).getNroFibras(); c++)  //recorrer por cores
+            {    
+                for (int j = 0; j < arrayIndiceDeRanurasLibres.get(c).size(); j++) //recorre por cant de FS en un core
+                {
+                    if (!ranuraEsSolucion(enlaces.get(i).getFibras().get(c).getFSs(), arrayIndiceDeRanurasLibres.get(c).get(j), demandaInfo.getTraf() + nivelDeModulacion)) 
+                    {
+                        copiaIndiceDeRanurasLibres.get(c).remove(arrayIndiceDeRanurasLibres.get(c).get(j));
+                    }
+
+                    //posiblemente aca agregar para borrar de la lista disponibles
+                }
+            }
+            arrayIndiceDeRanurasLibres = new ArrayList<>();
+            arrayIndiceDeRanurasLibres.addAll(copiaIndiceDeRanurasLibres);
+
+        return arrayIndiceDeRanurasLibres;
     }
 
-    public static boolean ranuraEsSolucion(List<Boolean> ranuras, int ranura, int cantSolicitada) {
-        if (!ranuras.get(ranura) && ranuras.size() > (ranura + cantSolicitada)) {
-            for (int i = (ranura + 1); i < (ranura + cantSolicitada); i++) {
-                if (ranuras.get(i)) {
+    public static boolean ranuraEsSolucion(List<Boolean> ranuras, int ranura, int cantSolicitada) 
+    {
+        if (!ranuras.get(ranura) && ranuras.size() > (ranura + cantSolicitada)) 
+        {
+            for (int i = (ranura + 1); i < (ranura + cantSolicitada); i++) 
+            {
+                if (ranuras.get(i)) 
+                {
                     return false;
                 }
             }
@@ -801,7 +830,7 @@ public class PoblacionInicial {
                         {
                             FS.add(false);
                         }
-                        fibra.setFS(FS);
+                        fibra.setFSs(FS);
                         fibras.add(fibra);
                     }
                     enlace.setInicio(i);
@@ -822,9 +851,11 @@ public class PoblacionInicial {
         while (i < demandasInfo.size()) {
             demandaInfo = demandasInfo.get(i);
             while (i < demandasInfo.size() &&
-                    demandaInfo.getOrigen() == demandasInfo.get(i).getOrigen() &&
-                    demandaInfo.getDestino() == demandasInfo.get(i).getDestino() ) {
-                if (demandasInfo.get(i).getX() > demandaInfo.getX()) {
+                       demandaInfo.getOrigen() == demandasInfo.get(i).getOrigen() &&
+                       demandaInfo.getDestino() == demandasInfo.get(i).getDestino() ) 
+            {
+                if (demandasInfo.get(i).getX() > demandaInfo.getX()) 
+                {
                     demandaInfo = demandasInfo.get(i);
                 }
                 i++;
